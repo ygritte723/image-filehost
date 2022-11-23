@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="zh">
+    <meta charset="UTF-8">
+    <!--    自定义css-->
+    <link rel="stylesheet" href="/css/MyStyle.css" />
+    <!--    自定义js-->
+    <script src="/js/myClickTool.js"></script>
+    <!--    JQ-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <!--    bootstrap套件-->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg" />
+    <!--    上传控件-->
+    <link rel="stylesheet" href="/fileinput/css/fileinput.min.css" />
+    <script type="text/javascript" src="/fileinput/js/fileinput.min.js"></script>
+    <script type="text/javascript" src="/fileinput/js/zh.js"></script>
+    <title>Designed By Zxl</title>
+    crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .pagination {
+            background: #cccccc;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('#myTabs a').click(function (e) {
+                $(this).tab('show')
+            });
+        })
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-lg-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-lg-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-lg-3">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Science">Science</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Technology">Technology</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-lg-3">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Science">Science</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Technology">Technology</a>
+ 
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav ml-lg-auto">
+            <li class="nav-item ml-lg-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Zxl</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--content-->
+<div class="container-lg pt-5 mt-2">
+    <div class="row bg-light">
+        <div class="col-sm-12 text-center">
+            <h3 style="font-family: Handwriting"><span class="align-bottom">提示板</span><span class="align-bottom"C
+                                                                                             style="font-size: large;">Tips!
+            </span>
+            </h3>
+        </div>
+        <div class="col-12 text-center">
+            <p><span style="font-family: Handwriting">操作已经完成或终止：<strong>提示信息如下</strong></span></p>
+        </div>
+        <div class="col-lg-4 col-md-2"></div>
+        <div class="col-lg-4 col-md-8 pl-5 pr-5 text-center bg-warning">
+            <h3 th:text="${status}">Unknown</h3>
+            <p th:text="${tips}">未知状态和状态信息</p>
+        </div>
+        <div class="col-lg-4 col-md-2"></div>
+        <div class="row card-body text-center">
+            <div class="col-12">
+                <p>╭操作╮</p>
+            </div>
+            <div class="col-6">
+                <a th:href="${a01}" class="btn btn-dark"><span th:text="${span01}" style="color: #ffffff ">返回主页</span></a>
+            </div>
+            <div class="col-6">
+                <a th:href="${a02}" class="btn btn-danger"><span th:text="${span02}" style="color: #ffffff ">返回主页</span></a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--    自定义css-->
+    <link rel="stylesheet" href="/css/MyStyle.css" />
+    <!--    自定义js-->
+    <script src="/js/myClickTool.js"></script>
+    <!--    JQ-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <!--    bootstrap套件-->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg" />
+    <title>Designed By Zxl</title>
+    crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <style>
+        .pagination {
+            background: #cccccc;
+        }
+        th{
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            text-align: center;
+            border-spacing: 0;/**设置相邻单元格的边框间的距离**/
+            border-collapse: collapse;/**边框会合并为一个单一的边框**/
+            color:#5a5a5a;
+            table-layout: fixed;/**固定table表格**/
+        }
+        table td,table th{
+            border:1px solid #ccc;
+            overflow: hidden;/**溢出隐藏**/
+            white-space: nowrap;/**不换行**/
+            text-overflow: ellipsis;/**溢出不可见部分使用...代替**/
+
+        }
+    </style>
+    <script type="text/javascript" th:inline="text">
+        $(function () {
+            $("#next").click(function () {
+                var pages = parseInt($("#pages").html());
+                var page = parseInt($("#currentPage").html());
+                if (page == pages) {
+                    return;
+                }
+                page++;
+                location.href = "/fileType?type=[[${type}]]&page=" + page;
+            })
+
+            $("#previous").click(function () {
+                var page = parseInt($("#currentPage").html());
+                if (page == 1) {
+                    return;
+                }
+                page--;
+                location.href = "/fileType?type=[[${type}]]&page=" + page;
+            })
+
+            $("#first").click(function () {
+                location.href = "/fileType?type=[[${type}]]&page=1";
+            })
+
+            $("#last").click(function () {
+                var pages = parseInt($("#pages").html());
+                location.href = "/fileType?type=[[${type}]]&page=" + pages;
+            })
+        })
+        $(function () {
+            $('#myTabs a').click(function (e) {
+                $(this).tab('show')
+            });
+        })
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-lg-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-lg-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-lg-3 active">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Science">Science</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Technology">Technology</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-lg-3">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Science">Science</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Technology">Technology</a>
+ 
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav ml-lg-auto">
+ 
+            <li class="nav-item ml-lg-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Zxl</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--内容部分-->
+<div class="container-lg pt-5">
+    <div class="row bg-light">
+        <div class="col-sm-12 text-center">
+            <h3 style="font-family: Handwriting"><span class="align-bottom">文件中转站</span>
+            </h3>
+            <form action="/fileType" method="get">
+                <div class="row">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-4 input-group">
+                        <input name="fileName" class="form-control">
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-info btn-block">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12">
+            <table class="table">
+                <thead class="thead-dark text-center">
+                <tr>
+                    <th scope="col">文件名</th>
+                    <th scope="col">上传日期</th>
+                    <th scope="col">最后下载</th>
+                    <th scope="col">占用空间(单位:MB)</th>
+                    <th scope="col">下载次数</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr th:each="file:${fileList}">
+                    <th style="vertical-align: middle" th:text="${file.getFileName()}" scope="row">${document.document_name}</th>
+                    <td style="vertical-align: middle" th:text="${#dates.format(file.getCreateDate(),'yyyy-MM-dd HH:mm:ss')}">${document.creation_date}</td>
+                    <td style="vertical-align: middle" th:text="${#dates.format(file.getUpdateDate(),'yyyy-MM-dd HH:mm:ss')}">${document.creation_date}</td>
+                    <td style="vertical-align: middle" th:text="${#numbers.formatDecimal(file.getFileSize()/(1024*1024),1,2)}">${document.file_size}</td>
+                    <td style="vertical-align: middle" th:text="${file.getDownloadCount()}">${document.download_count}</td>
+                    <td>
+                        <a th:href="@{/fileHost/delete/{id}(id=${file.getId()})}" class="btn btn-primary btn-sm">删除</a>
+                        <a th:href="@{/fileHost/download/{id}(id=${file.getId()})}" class="btn btn-secondary btn-sm">下载</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--        分页按钮-->
+</div>
+<ul class="pagination pagination-sm col-12 text-center justify-content-center mt-3" style="overflow: hidden">
+    <li id="first" class="page-item">
+        <button class="page-link">首页</button>
+    </li>
+    <li id="previous" class="page-item"><button class="page-link">上一页</button></li>
+    <li class="page-item"><button class="page-link">
+        <span id="currentPage" th:text="${#httpServletRequest.getSession().getAttribute('currentPage')}">${currentPage}</span>/
+        <span th:text="${#httpServletRequest.getSession().getAttribute('pages')}"
+              id="pages">${pages}</span>
+    </button></li>
+    <li id="next" class="page-item"><button class="page-link">下一页</button></li>
+    <li id="last" class="page-item">
+        <button class="page-link">尾页</button>
+    </li>
+</ul>
+</div>
+
+</body>
+</html>
+

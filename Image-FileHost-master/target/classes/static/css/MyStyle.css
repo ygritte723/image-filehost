@@ -1,0 +1,62 @@
+/*@media (prefers-color-scheme: dark) {*/
+/*    :root {*/
+/*        --accent: #3493d1;*/
+/*        --main: #f3f3f3;*/
+/*        --light: #ececec;*/
+/*        --lighter: #666666;*/
+/*        --border: #e6e6e6;*/
+/*        --bg: #333333;*/
+/*    }*/
+/*    #card{*/
+/*        background-color: #203b4e !important;;*/
+/*        color: white;*/
+/*    }*/
+/*    html{*/
+/*        background-image: none;*/
+/*        background-color: #235377;*/
+/*    }*/
+/*    body{*/
+/*        background-image: none;*/
+/*        background-color: #235377 !important;;*/
+/*    }*/
+/*}*/
+html{
+    background-image: url("../img/bg/bgi.webp");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment:fixed;;
+    background-color: #373a3f!important;;
+}
+
+body{
+   /*background-image: url(https://pic.downk.cc/item/5ebe9ad5c2a9a83be5dfc864.png);*/
+    background-image: url("../img/bg/bgi.webp");
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment:fixed;;
+	opacity: 0.95;
+}
+footer{
+	opacity: 0.6;
+}
+
+
+@font-face {
+	font-family: Handwriting;
+	src: url('../font/Handwriting.ttf');
+}
+
+.row {
+    margin-top: 20px;;
+}
+
+.center {
+    text-align: center;
+}
+
+.pagination{
+    background: none!important;
+}
+pagination{
+    background: none;
+}

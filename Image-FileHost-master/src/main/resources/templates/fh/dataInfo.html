@@ -1,0 +1,200 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!--    自定义css-->
+    <link rel="stylesheet" href="/css/MyStyle.css" />
+    <!--    自定义js-->
+    <script src="/js/myClickTool.js"></script>
+    <!--    JQ-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+    <!--    bootstrap套件-->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link href="https://libs.cdnjs.net/flat-ui/2.3.0/css/flat-ui.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/icon/favicon.svg" />
+    <title>Designed By Zxl</title>
+    crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        table {
+            width: 100%;
+            text-align: center;
+            border-spacing: 0;/**设置相邻单元格的边框间的距离**/
+            border-collapse: collapse;/**边框会合并为一个单一的边框**/
+            color:#5a5a5a;
+            table-layout: fixed;/**固定table表格**/
+        }
+        table td,table th{
+            border:1px solid #ccc;
+            overflow: hidden;/**溢出隐藏**/
+            white-space: nowrap;/**不换行**/
+            text-overflow: ellipsis;/**溢出不可见部分使用...代替**/
+
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top text-center">
+    <a class="navbar-brand" href="/">
+				<span style="font-family: 'Handwriting'; background: linear-gradient(to right, #E0E0E0, #FFFFFF);-webkit-background-clip: text;background-clip: text;color: transparent; ">
+					<img src="/img/icon/web.svg"/>
+					<span class="align-self-center">文件管理</span>
+				</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-lg-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item ml-lg-3">
+                <a class="nav-link" href="/imageType" >
+                    图床
+                </a>
+            </li>
+            <!--Homebrew-->
+            <li class="nav-item dropdown ml-lg-3">
+                <a class="nav-link dropdown-toggle" href="#" id="fileHost" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    文件中转站
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="fileHost">
+                    <a class="dropdown-item text-light " href="/fileType?type=Science">Science</a>
+                    <a class="dropdown-item text-light " href="/fileType?type=Technology">Technology</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-light" href="/fileType">中转站</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-lg-3 active">
+                <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    数据中心
+                </a>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="infoDropdown">
+                    <a class="dropdown-item text-light " href="/fileType/dataInfo?type=Science">Science</a>
+                    <a class="dropdown-item text-light" href="/fileType/dataInfo?type=Technology">Technology</a>
+ 
+            </li>
+        </ul>
+        <!-- 导航栏右侧 -->
+        <ul class="navbar-nav ml-lg-auto">
+ 
+            <li class="nav-item ml-lg-3">
+                <a th:if="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/login" class="nav-link ">登录</a>
+                <div th:unless="${#httpServletRequest.getSession().getAttribute('sessionUser')==null}" href="/userAdmin/admin" onclick="goToAdmin()" class="border bg-light text-dark btn">
+                    <img class="rounded-circle" style=" height:1.9rem;" th:src="@{'/userAdmin/getAvatar/'+${#httpServletRequest.getSession().getAttribute('sessionEmail')}}"> <span th:text="${#httpServletRequest.getSession().getAttribute('sessionUser')}" class="align-text-top" style="padding-left: 0.625rem;">Zxl</span>
+                </div>
+            </li>
+        </ul><!-- 导航栏右侧end -->
+    </div>
+</nav>
+<!--内容部分-->
+<div class="container-lg pt-5">
+    <div class="row bg-light pb-5">
+        <div class="col-sm-12 text-center">
+            <h3 style="font-family: Handwriting"><span class="align-bottom">数据中心</span>
+            </h3>
+            <form action="/fileType/dataInfo" method="get">
+                <input hidden="hidden" name="type" th:value="${type}">
+                <div class="row">
+                    <div class="col-sm-3 input-group-prepend text-left">
+                    <span th:if="${detailType}==null">
+                        <span class="input-group-text" >当前分类：ALL</span>
+                    </span>
+                        <span th:unless="${detailType}==null">
+                        <span class="input-group-text" th:text="'当前分类： ' + ${detailType}">当前分类：NULL</span>
+                    </span>
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-4">
+                        <select name="detailType" class="custom-select">
+                        <span th:each="type:${filetype}">
+                            <option th:value="${type}" th:text="${type}" value="ALL">ALL</option>
+                        </span>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-info btn-block">搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12">
+            <table id="tableSort" class="table">
+                <thead id="HeadTD" class="thead-dark text-center">
+                <tr>
+                    <th data-type="string" scope="col">文件名</th>
+                    <th data-type="date">最后下载</th>
+                    <th data-type="num" scope="col">预计消耗流量(单位:MB)</th>
+                    <th data-type="num" scope="col">累计调取次数</th>
+                    <th:block th:with="var1=0"></th:block>
+                </tr>
+                </thead>
+                <tbody id="ContTD" class="text-center">
+                <tr th:each="file:${fileList}">
+                    <td style="vertical-align: middle" th:text="${file.getFileName()}" scope="row">${document.document_name}</td>
+                    <td style="vertical-align: middle" th:text="${#dates.format(file.getUpdateDate(),'yyyy-MM-dd HH:mm:ss')}">${document.creation_date}</td>
+                    <td style="vertical-align: middle" th:text="${#numbers.formatDecimal(file.getFileSize()*file.getDownloadCount()/(1024*1024),1,2)}">${document.file_size}</td>
+                    <td style="vertical-align: middle" th:text="${file.getDownloadCount()}">${document.download_count}</td>
+                    <th:block th:with="var1=${#var1}"></th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="col-6 text-center">
+                总调取次数：<span th:text="${fileDownloadTotal}" style="background: linear-gradient(to right, #F97794, #623AA2);
+        -webkit-background-clip: text;background-clip: text;
+        color: transparent;">NULL</span>
+            </div>
+            <div class="col-6 text-center">
+                预计已消耗流量：<span th:text="${#numbers.formatDecimal(fileSizeTotal/(1024*1024),1,2)}" style="background: linear-gradient(to right, #F97794, #623AA2);
+        -webkit-background-clip: text;background-clip: text;
+        color: transparent;">NULL</span>
+            </div>
+    </div>
+</div>
+<script>
+    ;(function(){
+        var tbody = document.querySelector('#tableSort').tBodies[0];
+        var th = document.querySelector('#tableSort').tHead.rows[0].cells;
+        var td = tbody.rows;
+        for(var i = 0;i < th.length;i++){
+            th[i].flag = 1;
+            th[i].onclick = function(){
+                sort(this.getAttribute('data-type'),this.flag,this.cellIndex);
+                this.flag = -this.flag;
+            };
+        };
+        function sort(str,flag,n){
+            var arr = [];//存放DOM
+            for(var i = 0;i < td.length;i++){
+                arr.push(td[i]);
+            };
+            arr.sort(function(a,b){//排序
+                return method(str,a.cells[n].innerHTML,b.cells[n].innerHTML) * flag;
+            });
+            for(var i = 0;i < arr.length;i++){//添加
+                tbody.appendChild(arr[i]);
+            };
+        };
+        function method(str,a,b){//排序方法
+            switch(str){
+                case 'num':
+                    return a-b;
+                    break;
+                case 'string':
+                    return a.localeCompare(b);
+                    break;
+                default://日期排序，IE8下'2012-12-12'这种格式无法设置时间，替换成'/'
+                    return new Date(a.split('-').join('/')).getTime()-new Date(b.split('-').join('/')).getTime();
+            };
+        };
+    })();
+</script>
+</body>
+</html>
+

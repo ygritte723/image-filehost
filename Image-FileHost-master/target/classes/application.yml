@@ -1,0 +1,41 @@
+spring:
+  mail:
+    host: smtp.qq.com
+    username: 1064220853@qq.com
+    password: juuhraigxcuabdfj
+  resources:
+    static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:${upload.dir}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  servlet:
+    multipart:
+      max-file-size: 2000MB
+      max-request-size: 2000MB
+  mvc:
+    async:
+      request-timeout: 60000
+mybatis-plus:
+  type-enums-package: cn.zxl.filecloudplus.dao
+  global-config:
+    db-config:
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+      id-type: ASSIGN_ID
+  mapper-locations: classpath:/mapper/*Mapper.xml
+upload.dir: file
+server:
+  servlet:
+    session:
+      timeout: 90m
+  tomcat:
+    accept-count: 500
+    threads:
+      max: 400
+    connection-timeout: 60000
+  port: 8080
