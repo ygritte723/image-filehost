@@ -10,7 +10,7 @@ import java.net.URLConnection;
 
 public class saveAvatar {
     public static void main(String[] args) throws Exception {
-        System.out.println(saveAvatar("1064220853@qq.com","Small"));
+        System.out.println(saveAvatar("xxx@qq.com","Small"));
     }
     public static String saveAvatar(String email, String name){
         //判断是否为QQ邮箱

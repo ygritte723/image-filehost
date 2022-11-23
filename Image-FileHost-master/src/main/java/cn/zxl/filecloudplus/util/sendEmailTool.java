@@ -35,7 +35,7 @@ public class sendEmailTool {
                 
                
                 );
-        message.setFrom("1064220853@qq.com");
+        message.setFrom("xxx@qq.com");
         mailSender.send(message);
         return emailServiceCode;
     }
